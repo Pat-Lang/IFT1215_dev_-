@@ -9,8 +9,10 @@ while IFS="," read -r  prenom nom ID TP1 TP2 TP3 TP4 Intra Final
     echo "i got : $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4|$Intra |$Final"
     IetF 25 35
     #echo $pond
-    noteExam "$Intra" "$Final"
-    #echo "$noteExam"
+    echo $Intra
+    echo $Final
+   noteExam "$Intra" "$Final"
+    echo "$noteExam"
     noteTp "$TP1" "$TP2" "$TP3" "$TP4"
     echo "$noteTp"
     if "$noteExam" > "$pond";then
@@ -24,7 +26,7 @@ while IFS="," read -r  prenom nom ID TP1 TP2 TP3 TP4 Intra Final
     
     fi
      
-done < "$1"
+done >> "liste.csv"
 echo "end"
 
  }
