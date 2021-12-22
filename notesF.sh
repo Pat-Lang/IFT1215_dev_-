@@ -14,17 +14,20 @@ while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
     echo "noteExam: "$noteExam
     noteTp "$TP1" "$TP2" "$TP3" "$TP4"
     echo "noteTp:" "$noteTp"
-    #if "$noteExam" > "$pond";then 
-   total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-   echo "total: "$total
-   echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
-   echo " "
-    #else
-     #notesTp $TP1 $TP2 $TP3 $TP4
-     #  total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-      # echo "final: $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
+   if (( $(bc <<<"$noteExam > $pond") )); then 
+   echo "pass"
+    total=$( echo "scale=2;$noteTp+$noteExam" | bc)
+    echo "total: "$total
+    echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
+    echo " "
+   else
+   echo "fail"
+     noteTp $TP1 $TP2 $TP3 $TP4
+      total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
+      echo "final: $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
+      echo " "
     
-   # fi
+    fi
      
 done < "$1"
 echo "end"
