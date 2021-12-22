@@ -3,30 +3,30 @@ chmod +x notesF.sh
 #! notesF.sh script
 notesF ()
  {
-echo "$1"
-while IFS="," read -r  prenom nom ID TP1 TP2 TP3 TP4 Intra Final
+while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
     echo "i got : $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4|$Intra |$Final"
     IetF 25 35
-    #echo $pond
-    echo $Intra
-    echo $Final
-   noteExam "$Intra" "$Final"
-    echo "$noteExam"
+    echo "pond: " $pond
+    echo "intra: " $Intra
+    echo "Final: " $Final
+    Exam $Intra $Final
+    echo "noteExam: "$noteExam
     noteTp "$TP1" "$TP2" "$TP3" "$TP4"
-    echo "$noteTp"
-    if "$noteExam" > "$pond";then
-       
-       total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-       echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
-    else
+    echo "noteTp:" "$noteTp"
+    #if "$noteExam" > "$pond";then 
+   total=$( echo "scale=2;$noteTp+$noteExam" | bc)
+   echo "total: "$total
+   echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
+   echo " "
+    #else
      #notesTp $TP1 $TP2 $TP3 $TP4
-       total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-       echo " final : $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$noteExam |$total"
+     #  total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
+      # echo "final: $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
     
-    fi
+   # fi
      
-done >> "liste.csv"
+done < "$1"
 echo "end"
 
  }
@@ -47,14 +47,8 @@ noteTp ()
     Tp4=$( echo "scale=2; $4*$pTp" | bc)
     noteTp=$( echo "scale=2; $Tp1+$Tp2+$Tp3+$Tp4" | bc )
 }
-
-noteExam ()
+Exam ()
 {
- intraPond=$( echo "scale=2; $1*25/100" | bc)
- finalPond=$( echo "scale=2; $2*35/100"| bc) 
- noteExam=$( echo "scale=2; $intraPond+$finalPond" | bc)
- #echo $noteExam
-
-
+noteExam=$( echo "scale=2; $Intra*25/100+$Final*35/100" | bc)
 }
 notesF listeNotes.csv
