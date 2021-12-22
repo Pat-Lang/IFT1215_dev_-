@@ -7,16 +7,18 @@ echo $1
 while IFS="," read -r  prenom nom ID TP1 TP2 TP3 TP4 Intra Final
   do
     echo "i got : $prenom| $nom | $ID | $TP1 | $TP2 |$TP3 | $TP4| $Intra |$Final"
-    pond=IetF 25 35
-    noteIetF=$noteExam $Intra $Final
-    if (($noteIerF > $pond));then
-       noteTP=notesTp $TP1 $TP2 $TP3 $TP4
-       ((total=$noteIetF+$noteTP))
-       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $notesIeT $total
+    IetF 25 35
+    echo $pond
+    noteExam $Intra $Final
+    notesTp $TP1 $TP2 $TP3 $TP4
+    if $noteExam > $pond;then
+       
+       total=$( echo "scale=2;$notesTp+$noteExam" | bc)
+       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $noteExam $total
     else
-     noteTP=notesTp $TP1 $TP2 $TP3 $TP4
-       ((total=$noteIetF+($noteTP/2)))
-       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $notesIeT $total
+     #notesTp $TP1 $TP2 $TP3 $TP4
+       total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
+       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $noteExam $total
     
     fi
      
@@ -28,40 +30,29 @@ done < $1
 IetF()
 {
      z=$1+$2
-     y=($z)%2
-     x=($z)/2
-     t=$x+$y 
-    pond=$((t))
-   echo $pond
-   return $pond
- 
-} 
+     pond=$( echo "scale=2; ($z)/2" | bc)
+    #echo $pond
+}
 notesTp ()
 {
-    tp1=$1
-    tp2=$2
-    tp3=$3
-    tp4=$4
-    pTp=10/100
-    ((noteTp1=$tp1*$pTp))|bc
-    ((noteTp2=$tp2*$pTp))|bc
-    ((noteTp3=$tp3*$pTp))|bc
-    ((noteTp4=$tp4*$pTp))|bc
-    ((note=$noteTp1+$noteTp2+$noteTp3+$noteTp4))|bc
-    #echo $note
-   # echo "result"
-    return $note
+    pTp=$( echo "scale=2; 10/100" | bc) 
+    echo $pTp
+    Tp1=$( echo "scale=2; $1*$pTp" | bc)
+    Tp2=$( echo "scale=2; $2*$pTp" | bc)
+    Tp3=$( echo "scale=2; $3*$pTp" | bc)
+    Tp4=$( echo "scale=2; $4*$pTp" | bc)
+    noteTp=$( echo "scsle=2; $Tp1+$Tp2+$Tp3+$Tp4" | bc )
+    echo $noteTp
+    #return $noteTp
 }
 
 noteExam ()
 {
- intra=$1
- final=$2
- ((intaPond=$intra*25/100))|bc
- ((finalPond=$final*30/100))|bc 
- ((total=$intaPond+finalPond))|bc
- retun $total
+ intaPond=$( echo "scale=2; $1*25/100" | bc)
+ finalPond=$( echo "scale=2; $2*35/100"| bc) 
+ noteExam=$( echo "scale=2; $intaPond+$finalPond" | bc)
+ #echo $noteExam
+
 
 }
 notesF listeNotes.csv
-mathNotes 50 40 60 80
