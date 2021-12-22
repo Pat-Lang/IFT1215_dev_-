@@ -1,12 +1,19 @@
 #! /bin/bash
 chmod +x notesF.sh
 #! notesF.sh script
+
+
+#main branch qui call tout les autres fontion 
+# a comme but de prendre des donnees cvs et les compiles pour donner 
+# la note final.
 notesF ()
  {
 while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
     IetF 25 35
+   
     Exam "$Intra" "$Final"
+    
     noteTp "$TP1" "$TP2" "$TP3" "$TP4"
    if (( $(bc <<<"$noteExam > $pond") )); then 
       total=$( echo "scale=2;$noteTp+$noteExam" | bc)
@@ -25,12 +32,15 @@ echo "end"
 
  }
 
-
+# IetF {pond intra} {pond final} calacul la ponderation des deux
+    # et retourne la note de passage requise
 IetF()
 {
      z=$1+$2
      pond=$( echo "scale=2; ($z)/2" | bc)
 }
+# la fonction noteTp {note TP1}{note TP2}{note TP3}{note TP4}
+    #applique la ponderation de 10% et sum les notes
 noteTp ()
 {
     pTp=$( echo "scale=2; 10/100" | bc) 
@@ -40,6 +50,8 @@ noteTp ()
     Tp4=$( echo "scale=2; $4*$pTp" | bc)
     noteTp=$( echo "scale=2; $Tp1+$Tp2+$Tp3+$Tp4" | bc )
 }
+ # la fontion exam prend {note Intra}{note final} et renvoi 
+    #le combiné des deux notes ponderées
 Exam ()
 {
 noteExam=$( echo "scale=2; $Intra*25/100+$Final*35/100" | bc)
