@@ -8,23 +8,30 @@ chmod +x notesF.sh
 # la note final.
 notesF ()
  {
+     i=0
 while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
-    IetF 25 35
-   
-    Exam "$Intra" "$Final"
+  
+  
+  if (( $(bc <<<"$i == 0") )); then 
+    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF(30%) |Total"
+    i=$((i+1))
     
-    noteTp "$TP1" "$TP2" "$TP3" "$TP4"
-   if (( $(bc <<<"$noteExam > $pond") )); then 
-      total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-      echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
-      echo " "
-   else
-      noteTp $TP1 $TP2 $TP3 $TP4
-      total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-      echo "final: $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
-      echo " "
+  elif (( $(bc <<<"$i == !0") )); then 
+      IetF 25 35
+      Exam "$Intra" "$Final"
+      noteTp "$TP1" "$TP2" "$TP3" "$TP4"
+      if (( $(bc <<<"$noteExam > $pond") )); then 
+         #echo "pass"
+         total=$( echo "scale=2;$noteTp+$noteExam" | bc)
+         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
+      else
+         #echo "fail"
+         noteTp $TP1 $TP2 $TP3 $TP4
+         total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
+         echo " $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
     
+      fi
    fi
      
 done < "$1"
