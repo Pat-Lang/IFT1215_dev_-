@@ -3,26 +3,29 @@ chmod +x notesF.sh
 #! notesF.sh script
 notesF ()
  {
-echo $1
+echo "$1"
 while IFS="," read -r  prenom nom ID TP1 TP2 TP3 TP4 Intra Final
   do
-    echo "i got : $prenom| $nom | $ID | $TP1 | $TP2 |$TP3 | $TP4| $Intra |$Final"
+    echo "i got : $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4|$Intra |$Final"
     IetF 25 35
-    echo $pond
-    noteExam $Intra $Final
-    notesTp $TP1 $TP2 $TP3 $TP4
-    if $noteExam > $pond;then
+    #echo $pond
+    noteExam "$Intra" "$Final"
+    #echo "$noteExam"
+    noteTp "$TP1" "$TP2" "$TP3" "$TP4"
+    echo "$noteTp"
+    if "$noteExam" > "$pond";then
        
-       total=$( echo "scale=2;$notesTp+$noteExam" | bc)
-       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $noteExam $total
+       total=$( echo "scale=2;$noteTp+$noteExam" | bc)
+       echo " final : $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
     else
      #notesTp $TP1 $TP2 $TP3 $TP4
        total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-       echo $prenom $nom $ID $TP1 $TP2 $TP3 $TP4 $noteExam $total
+       echo " final : $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$noteExam |$total"
     
     fi
      
-done < $1
+done < "$1"
+echo "end"
 
  }
 
@@ -33,24 +36,21 @@ IetF()
      pond=$( echo "scale=2; ($z)/2" | bc)
     #echo $pond
 }
-notesTp ()
+noteTp ()
 {
     pTp=$( echo "scale=2; 10/100" | bc) 
-    echo $pTp
     Tp1=$( echo "scale=2; $1*$pTp" | bc)
     Tp2=$( echo "scale=2; $2*$pTp" | bc)
     Tp3=$( echo "scale=2; $3*$pTp" | bc)
     Tp4=$( echo "scale=2; $4*$pTp" | bc)
-    noteTp=$( echo "scsle=2; $Tp1+$Tp2+$Tp3+$Tp4" | bc )
-    echo $noteTp
-    #return $noteTp
+    noteTp=$( echo "scale=2; $Tp1+$Tp2+$Tp3+$Tp4" | bc )
 }
 
 noteExam ()
 {
- intaPond=$( echo "scale=2; $1*25/100" | bc)
+ intraPond=$( echo "scale=2; $1*25/100" | bc)
  finalPond=$( echo "scale=2; $2*35/100"| bc) 
- noteExam=$( echo "scale=2; $intaPond+$finalPond" | bc)
+ noteExam=$( echo "scale=2; $intraPond+$finalPond" | bc)
  #echo $noteExam
 
 
