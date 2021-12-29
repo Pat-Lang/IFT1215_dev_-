@@ -6,16 +6,19 @@ chmod +x notesF.sh
 #main branch qui call tout les autres fontion 
 # a comme but de prendre des donnees cvs et les compiles pour donner 
 # la note final.
+
+
 notesF ()
  {
      i=0
 while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
   
-  
   if (( $(bc <<<"$i == 0") )); then 
-    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF(30%) |Total"
+    IetF 25 35
+    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF("$pond"%) |Total"
     i=$((i+1))
+    
     
   elif (( $(bc <<<"$i == !0") )); then 
       IetF 25 35
@@ -24,7 +27,7 @@ while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
       if (( $(bc <<<"$noteExam > $pond") )); then 
          #echo "pass"
          total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $noteExam |$total"
+         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4|$Intra |$Final |$noteExam |$total"
       else
          #echo "fail"
          noteTp $TP1 $TP2 $TP3 $TP4
@@ -45,6 +48,7 @@ IetF()
 {
      z=$1+$2
      pond=$( echo "scale=2; ($z)/2" | bc)
+     
 }
 # la fonction noteTp {note TP1}{note TP2}{note TP3}{note TP4}
     #applique la ponderation de 10% et sum les notes
@@ -64,4 +68,4 @@ Exam ()
 noteExam=$( echo "scale=2; $Intra*25/100+$Final*35/100" | bc)
 }
 
-notesF listeNotes.csv
+notesF $1
