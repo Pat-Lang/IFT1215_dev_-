@@ -10,13 +10,15 @@ chmod +x notesF.sh
 
 notesF ()
  {
+    touch notes$2.csv 
+    > notes$2.csv  
      i=0
 while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
   
   if (( $(bc <<<"$i == 0") )); then 
     IetF 25 35
-    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF("$pond"%) |Total"
+    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF("$pond"%) |Total" >> notes$2.csv 
     i=$((i+1))
     
     
@@ -27,12 +29,12 @@ while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
       if (( $(bc <<<"$noteExam > $pond") )); then 
          #echo "pass"
          total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4|$Intra |$Final |$noteExam |$total"
+         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4|$Intra |$Final |$noteExam |$total" >> notes$2.csv 
       else
          #echo "fail"
          noteTp $TP1 $TP2 $TP3 $TP4
          total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-         echo " $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total"
+         echo " $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total" >> notes$2.csv 
     
       fi
    fi
@@ -68,4 +70,4 @@ Exam ()
 noteExam=$( echo "scale=2; $Intra*25/100+$Final*35/100" | bc)
 }
 
-notesF $1
+notesF $1 $2
