@@ -6,35 +6,37 @@ chmod +x notesF.sh
 #main branch qui call tout les autres fontion 
 # a comme but de prendre des donnees cvs et les compiles pour donner 
 # la note final.
-
+#prend 3 arguments {nom du fichier liseNotes.csv }{seuil de passage Ex:50} 
+# {groupe ex:A16}
+#les linges du fichier csv doivent ce finir par une vergule (,) si crée
+# sur widows. mauviase traduction cause un bug pour le line change CHAR.
+# renvoi un fichier notes{groupe}.csv
 
 notesF ()
  {
-    touch notes$2.csv 
-    > notes$2.csv  
+    touch notes$3.csv 
+    > notes$3.csv  
      i=0
 while IFS="," read -ers  prenom nom ID TP1 TP2 TP3 TP4 Intra Final extra
   do
   
   if (( $(bc <<<"$i == 0") )); then 
-    IetF 25 35
-    echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4| $Intra |$Final |IetF("$pond"%) |Total" >> notes$2.csv 
+    IetF 25 35 $2
+    echo " $prenom, $nom, $ID, $TP1, $TP2, $TP3, $TP4, $Intra ,$Final ,IetF("$pond"%) ,Total" >> notes$3.csv 
     i=$((i+1))
     
     
   elif (( $(bc <<<"$i == !0") )); then 
-      IetF 25 35
+      IetF 25 35 $2
       Exam "$Intra" "$Final"
       noteTp "$TP1" "$TP2" "$TP3" "$TP4"
       if (( $(bc <<<"$noteExam > $pond") )); then 
-         #echo "pass"
          total=$( echo "scale=2;$noteTp+$noteExam" | bc)
-         echo " $prenom| $nom| $ID| $TP1| $TP2| $TP3| $TP4|$Intra |$Final |$noteExam |$total" >> notes$2.csv 
+         echo " $prenom, $nom, $ID, $TP1, $TP2, $TP3, $TP4, $Intra, $Final, $noteExam, $total" >> notes$3.csv 
       else
-         #echo "fail"
          noteTp $TP1 $TP2 $TP3 $TP4
          total=$( echo "scale=2; $noteExam+($noteTp/2)" | bc)
-         echo " $prenom|$nom |$ID |$TP1 |$TP2 |$TP3 |$TP4 |$Intra |$Final |$noteExam |$total" >> notes$2.csv 
+         echo " $prenom, $nom, $ID, $TP1, $TP2, $TP3, $TP4, $Intra, $Final, $noteExam, $total" >> notes$3.csv 
     
       fi
    fi
@@ -48,8 +50,11 @@ echo "end"
     # et retourne la note de passage requise
 IetF()
 {
+     #echo $3
      z=$1+$2
-     pond=$( echo "scale=2; ($z)/2" | bc)
+     y=$( echo "scale=2; $3/100" | bc)
+     pond=$( echo "scale=2; ($z)*$y" | bc)
+     #echo $pond
      
 }
 # la fonction noteTp {note TP1}{note TP2}{note TP3}{note TP4}
@@ -70,4 +75,4 @@ Exam ()
 noteExam=$( echo "scale=2; $Intra*25/100+$Final*35/100" | bc)
 }
 
-notesF $1 $2
+notesF $1 $2 $3
