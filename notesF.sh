@@ -2,6 +2,11 @@
 chmod +x notesF.sh
 #! notesF.sh script
 
+# Patrick Langlois 20197071
+# Ramon Enrique Altuna Castillo 20223580
+# Christophe Kruger 20180505
+# 28/DEC/2021
+
 
 #main branch qui call tout les autres fontion 
 # a comme but de prendre des donnees cvs et les compiles pour donner 
